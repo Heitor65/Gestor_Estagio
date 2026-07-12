@@ -6,11 +6,6 @@ class StatusDocumento(models.TextChoices):
     REPROVADO = 'reprovado', 'Reprovado'
 
 
-class TipoPerfil(models.TextChoices):
-    ALUNO = 'aluno', 'Aluno'
-    SECRETARIA = 'secretaria', 'Secretaria'
-    COORDENADOR = 'coordenador', 'Coordenador'
-
 class UNIDADE_CHOICES(models.TextChoices):
     BARRA = 'barra', 'Barra'
     BOTAFOGO = 'botafogo', 'Botafogo'
