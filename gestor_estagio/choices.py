@@ -5,31 +5,34 @@ class StatusDocumento(models.TextChoices):
     APROVADO = 'aprovado', 'Aprovado'
     REPROVADO = 'reprovado', 'Reprovado'
 
-UNIDADE_CHOICES = [
-    ('barra', 'Barra'),
-    ('botafogo', 'Botafogo'),
-]
 
-AREA_CHOICES = [
-    ('negocios', 'Negócios'),
-    ('tecnologia', 'Tecnologia'),
-    ('financas', 'Finanças'),
-    ('direito', 'Direito'),
-    ('engenharia', 'Engenharia'),
-]
+class TipoPerfil(models.TextChoices):
+    ALUNO = 'aluno', 'Aluno'
+    SECRETARIA = 'secretaria', 'Secretaria'
+    COORDENADOR = 'coordenador', 'Coordenador'
 
-CURSOS_CHOICES = [
-    ('administração', 'Administração'),
-    ('analise e desenvolvimento de sistemas', 'Análise e Desenvolvimento de Sistemas'),
-    ('arquitetura e urbanismo', 'Arquitetura e Urbanismo'),
-    ('ciencia de dados e inteligencia artificial', 'Ciência de Dados e Inteligência Artificial'),
-    ('ciencias contabeis', 'Ciências Contábeis'),
-    ('direito', 'Direito'),
-    ('ciencias economicas', 'Ciências Econômicas'),
-    ('comunicacao social - publicidade e propaganda', 'Comunicação Social - Publicidade e Propaganda'),
-    ('engenharia civil', 'Engenharia Civil'),
-    ('engenharia de producao', 'Engenharia de Produção'),
-    ('engenharia da computacao', 'Engenharia da Computação'),
-    ('engenharia de software', 'Engenharia de Software'),
-    ('relacoes internacionais', 'Relações Internacionais'),
-]
+class UNIDADE_CHOICES(models.TextChoices):
+    BARRA = 'barra', 'Barra'
+    BOTAFOGO = 'botafogo', 'Botafogo'
+
+class AREA_CHOICES(models.TextChoices):
+    NEGOCIOS = 'negocios', 'Negócios'
+    TECNOLOGIA = 'tecnologia', 'Tecnologia'
+    FINANCAS = 'financas', 'Finanças'
+    DIREITO = 'direito', 'Direito'
+    ENGENHARIA = 'engenharia', 'Engenharia'
+
+class CURSOS_CHOICES(models.TextChoices):
+    ADMINISTRACAO = 'administração', 'Administração'
+    ANALISE_DESENVOLVIMENTO_SISTEMAS = 'analise e desenvolvimento de sistemas', 'Análise e Desenvolvimento de Sistemas'
+    ARQUITETURA_URBANISMO = 'arquitetura e urbanismo', 'Arquitetura e Urbanismo'
+    CIENCIA_DADOS_INTELIGENCIA_ARTIFICIAL = 'ciencia de dados e inteligencia artificial', 'Ciência de Dados e Inteligência Artificial'
+    CIENCIAS_CONTABEIS = 'ciencias contabeis', 'Ciências Contábeis'
+    DIREITO = 'direito', 'Direito'
+    CIENCIAS_ECONOMICAS = 'ciencias economicas', 'Ciências Econômicas'
+    COMUNICACAO_SOCIAL_PUBLICIDADE_PROPAGANDA = 'comunicacao social - publicidade e propaganda', 'Comunicação Social - Publicidade e Propaganda'
+    ENGENHARIA_CIVIL = 'engenharia civil', 'Engenharia Civil'
+    ENGENHARIA_PRODUCAO = 'engenharia de producao', 'Engenharia de Produção'
+    ENGENHARIA_COMPUTACAO = 'engenharia da computacao', 'Engenharia da Computação'
+    ENGENHARIA_SOFTWARE = 'engenharia de software', 'Engenharia de Software'
+    RELACOES_INTERNACIONAIS = 'relacoes internacionais', 'Relações Internacionais'
