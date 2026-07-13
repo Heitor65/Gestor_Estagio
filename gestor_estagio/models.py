@@ -10,6 +10,8 @@ from django.core.exceptions import ValidationError
 class Usuario(AbstractUser):
     matricula = models.CharField(max_length=20, validators=[validar_matricula], unique=True, verbose_name="Matrícula")
     unidade = models.CharField(max_length=20, choices=UNIDADE_CHOICES, verbose_name="Unidade")
+    USERNAME_FIELD = 'matricula'
+    REQUIRED_FIELDS = ['username', 'email']
 
 class Aluno(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, db_column='matricula', verbose_name="Usuário")
