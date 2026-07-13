@@ -24,14 +24,14 @@ class EmpresaSerializer(serializers.ModelSerializer):
 class TceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tce
-        fields = 'status', 'apoliceseguro', 'bolsa', 'secretaria.id', 'aluno.matricula'
+        fields = 'status', 'apoliceseguro', 'bolsa'
 
 class EstagioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Estagio
-        fields = 'id', 'dtinicio', 'dtfim', 'tce.apoliceseguro', 'empresa.id'
+        fields = 'id', 'dtinicio', 'dtfim', 'tce.apoliceseguro'
 
 class RelatorioSemestralSerializer(serializers.ModelSerializer):
     class Meta:
         model = RelatorioSemestral
-        fields = 'status', 'data_envio', 'semestre', 'horas_estagiadas', 'coordenador.id', 'estagio.id'
+        fields = 'status', 'data_envio', 'semestre', 'horas_estagiadas'
