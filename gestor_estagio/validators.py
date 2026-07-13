@@ -12,11 +12,15 @@ def validar_semestre(semestre):
 
 def validar_cpf(cpf):
 
+    cpf = cpf.replace('.', '').replace('-', '')
+
     if not is_valid_cpf(cpf):
         raise ValidationError('O CPF deve estar em um formato válido. Exemplo: 123.456.789-09')
 
 def validar_cnpj(cnpj):
 
+    cnpj = cnpj.replace('.', '').replace('/', '').replace('-', '')
+    
     if not is_valid_cnpj(cnpj):
         raise ValidationError('O CNPJ deve estar em um formato válido. Exemplo: 12.345.678/0001-99')
 
