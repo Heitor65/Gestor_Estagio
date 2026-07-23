@@ -1,7 +1,7 @@
 from django.db import models
 from encrypted_model_fields.fields import EncryptedCharField
 import hashlib
-from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.contrib.auth.models import AbstractUser
 from phonenumber_field.modelfields import PhoneNumberField
 from .validators import validar_cpf, validar_cnpj, validar_matricula, validar_cep, validar_periodo, validar_positivo, validar_semestre
 from .choices import StatusDocumento, UNIDADE_CHOICES, AREA_CHOICES, CURSOS_CHOICES
