@@ -6,11 +6,32 @@ from .permissions import IsAluno, IsSecretaria, IsCoordenador
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 
 class AlunoViewSet(viewsets.ModelViewSet):
     queryset = Aluno.objects.all()
     serializer_class = AlunoSerializer
+
+    def get_permissions(self):
+        if self.action == "list":
+            return [IsSecretaria() | IsCoordenador()]
+
+        if self.action == "create":
+            return [IsSecretaria()]
+
+        if self.action == "retrieve":
+            return [IsSecretaria() | IsCoordenador()]
+
+        if self.action == "me":
+            return [IsAluno()]
+
+        return [IsAuthenticated()]
+
+    @action(detail=False, methods=["get"])
+    def me(self, request):
+        serializer = self.get_serializer(request.user.aluno)
+        return Response(serializer.data)
 
 class SecretariaViewSet(viewsets.ModelViewSet):
     queryset = Secretaria.objects.all()
@@ -30,11 +51,11 @@ class TceViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action == 'create':
-            permission_classes = [IsAluno]
+            permission_classes = [IsAluno()]
         elif self.action in ['partial_update', 'update']:
-            permission_classes = [IsSecretaria]
+            permission_classes = [IsSecretaria()]
         else:
-            permission_classes = [permissions.IsAuthenticated]
+            permission_classes = [permissions.IsAuthenticated()]
         return [p() for p in permission_classes]
     
     @action(detail=True, methods=['post'], permission_classes=[IsSecretaria])
@@ -55,12 +76,36 @@ class EstagioViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action == 'create':
-            permission_classes = [IsSecretaria]
+            permission_classes = [IsSecretaria()]
+        elif self.action in ['adicionar_relatorio']:
+            permission_classes = [IsAluno()]
         elif self.action in ['update', 'partial_update', 'destroy']:
-            permission_classes = [IsSecretaria]
+            permission_classes = [IsSecretaria()]
         else:
-            permission_classes = [permissions.IsAuthenticated]
-        return [p() for p in permission_classes]
+            permission_classes = [IsAuthenticated()]
+        return permission_classes
+
+    @action(detail=True, methods=['post'], permission_classes=[IsAluno], url_path='adicionar_relatorio')
+    def adicionar_relatorio(self, request, pk=None):
+        estagio = self.get_object()
+
+        area = request.data.get('coordenador.area')
+
+        if not area:
+            return Response({'coordenador_area': 'Este campo é obrigatório.'}, status=400)
+
+        try:
+            coordenador = Coordenador.objects.get(area=area)
+        except Coordenador.DoesNotExist:
+            return Response({'coordenador': 'Coordenador não encontrado.'}, status=400)
+
+        serializer = RelatorioSemestralSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        serializer.save(estagio=estagio, coordenador=coordenador)
+    
+        novo_relatorio = serializer.instance
+        return Response(RelatorioSemestralSerializer(novo_relatorio).data,status=201)
 
 class RelatorioSemestralViewSet(viewsets.ModelViewSet):
     queryset = RelatorioSemestral.objects.all()
@@ -68,20 +113,20 @@ class RelatorioSemestralViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action == 'create':
-            permission_classes = [IsAluno]
+            permission_classes = [IsAluno()]
         elif self.action in ['partial_update', 'update']:
-            permission_classes = [IsCoordenador]
+            permission_classes = [IsCoordenador()]
         else:
-            permission_classes = [permissions.IsAuthenticated]
+            permission_classes = [permissions.IsAuthenticated()]
         return [p() for p in permission_classes]
     
-    @action(detail=True, methods=['post'], permission_classes=[IsCoordenador])
+    @action(detail=True, methods=['post'], permission_classes=[IsCoordenador()])
     def aprovar(self, request, pk=None):
         relatorio = self.get_object()
         relatorio.se_aprovar()
         return Response({'status': 'Relatório aprovado'})
 
-    @action(detail=True, methods=['post'], permission_classes=[IsCoordenador])
+    @action(detail=True, methods=['post'], permission_classes=[IsCoordenador()])
     def reprovar(self, request, pk=None):
         relatorio = self.get_object()
         relatorio.se_reprovar()
