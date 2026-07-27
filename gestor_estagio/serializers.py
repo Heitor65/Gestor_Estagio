@@ -117,7 +117,7 @@ class EstagioSerializer(serializers.ModelSerializer):
         fields = ('id', 
                   'dtinicio', 
                   'dtfim', 
-                  'tce.apoliceseguro'
+                  'tce'
                   )
 
 class RelatorioSemestralSerializer(serializers.ModelSerializer):
