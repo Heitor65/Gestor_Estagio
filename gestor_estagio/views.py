@@ -15,18 +15,18 @@ class AlunoViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action == "list":
-            return [IsSecretaria() | IsCoordenador()]
+            return [IsSecretaria | IsCoordenador]
 
         if self.action == "create":
-            return [IsSecretaria()]
+            return [IsSecretaria]
 
         if self.action == "retrieve":
-            return [IsSecretaria() | IsCoordenador()]
+            return [IsSecretaria | IsCoordenador]
 
         if self.action == "me":
-            return [IsAluno()]
+            return [IsAluno]
 
-        return [IsAuthenticated()]
+        return [IsAuthenticated]
 
     @action(detail=False, methods=["get"])
     def me(self, request):
@@ -51,11 +51,11 @@ class TceViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action == 'create':
-            permission_classes = [IsAluno()]
+            permission_classes = [IsAluno]
         elif self.action in ['partial_update', 'update']:
-            permission_classes = [IsSecretaria()]
+            permission_classes = [IsSecretaria]
         else:
-            permission_classes = [permissions.IsAuthenticated()]
+            permission_classes = [permissions.IsAuthenticated]
         return [p() for p in permission_classes]
     
     @action(detail=True, methods=['post'], permission_classes=[IsSecretaria])
@@ -76,13 +76,13 @@ class EstagioViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action == 'create':
-            permission_classes = [IsSecretaria()]
+            permission_classes = [IsSecretaria]
         elif self.action in ['adicionar_relatorio']:
-            permission_classes = [IsAluno()]
+            permission_classes = [IsAluno]
         elif self.action in ['update', 'partial_update', 'destroy']:
-            permission_classes = [IsSecretaria()]
+            permission_classes = [IsSecretaria]
         else:
-            permission_classes = [IsAuthenticated()]
+            permission_classes = [IsAuthenticated]
         return permission_classes
 
     @action(detail=True, methods=['post'], permission_classes=[IsAluno], url_path='adicionar_relatorio')
@@ -113,20 +113,20 @@ class RelatorioSemestralViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action == 'create':
-            permission_classes = [IsAluno()]
+            permission_classes = [IsAluno]
         elif self.action in ['partial_update', 'update']:
-            permission_classes = [IsCoordenador()]
+            permission_classes = [IsCoordenador]
         else:
-            permission_classes = [permissions.IsAuthenticated()]
+            permission_classes = [permissions.IsAuthenticated]
         return [p() for p in permission_classes]
     
-    @action(detail=True, methods=['post'], permission_classes=[IsCoordenador()])
+    @action(detail=True, methods=['post'], permission_classes=[IsCoordenador])
     def aprovar(self, request, pk=None):
         relatorio = self.get_object()
         relatorio.se_aprovar()
         return Response({'status': 'Relatório aprovado'})
 
-    @action(detail=True, methods=['post'], permission_classes=[IsCoordenador()])
+    @action(detail=True, methods=['post'], permission_classes=[IsCoordenador])
     def reprovar(self, request, pk=None):
         relatorio = self.get_object()
         relatorio.se_reprovar()
