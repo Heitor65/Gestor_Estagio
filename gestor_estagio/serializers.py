@@ -1,37 +1,131 @@
 from rest_framework import serializers
-from .models import Aluno, Secretaria, Coordenador, Empresa, Tce, Estagio, RelatorioSemestral
+from .models import Usuario, Aluno, Secretaria, Coordenador, Empresa, Tce, Estagio, RelatorioSemestral
+
+class UsuarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Usuario
+        fields = (
+            "matricula",
+            "username",
+            "password",
+            "email",
+            "first_name",
+            "last_name",
+            "unidade",
+        )
+        extra_kwargs = {
+            "password": {"write_only": True}
+        }
 
 class AlunoSerializer(serializers.ModelSerializer):
+    usuario = UsuarioSerializer()
+
     class Meta:
         model = Aluno
-        fields = 'username', 'email', 'first_name', 'last_name', 'matricula', 'unidade', 'telefone', 'cpf', 'dt_nascimento', 'procurando_estagio', 'horas_estagio', 'periodo', 'curso'
+        fields = (
+            "usuario",
+            "telefone",
+            "cpf",
+            "dt_nascimento",
+            "procurando_estagio",
+            "horas_estagio",
+            "periodo",
+            "curso",
+        )
+
+    def create(self, validated_data):
+        usuario_data = validated_data.pop("usuario")
+        password = usuario_data.pop("password")
+
+        usuario = Usuario.objects.create_user(
+            password=password,
+            **usuario_data
+        )
+
+        return Aluno.objects.create(
+            usuario=usuario,
+            **validated_data
+        )
 
 class SecretariaSerializer(serializers.ModelSerializer):
+    usuario = UsuarioSerializer()
+    
     class Meta:
         model = Secretaria
-        fields = 'username', 'email', 'first_name', 'last_name', 'matricula', 'unidade', 'carteira_de_trabalho'
+        fields = (
+            "usuario",
+            "carteira_de_trabalho",
+            )
+    
+    def create(self, validated_data):
+        usuario_data = validated_data.pop("usuario")
+        password = usuario_data.pop("password")
+    
+        usuario = Usuario.objects.create_user(
+            password=password,
+            **usuario_data
+            )
+    
+        return Secretaria.objects.create(
+            usuario=usuario,
+            **validated_data
+            )
 
 class CoordenadorSerializer(serializers.ModelSerializer):
+    usuario = UsuarioSerializer()
+
     class Meta:
         model = Coordenador
-        fields = 'username', 'email', 'first_name', 'last_name', 'matricula', 'unidade', 'area'
+        fields = ('usuario', 
+                  'area', 
+                  )
+
+    def create(self, validated_data):
+            usuario_data = validated_data.pop("usuario")
+            password = usuario_data.pop("password")
+        
+            usuario = Usuario.objects.create_user(
+                password=password,
+                **usuario_data
+                )
+        
+            return Coordenador.objects.create(
+                usuario=usuario,
+                **validated_data
+                )
 
 class EmpresaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Empresa
-        fields = 'id', 'razao_social', 'telefone', 'cep'
+        fields = ('id', 
+                  'razao_social', 
+                  'telefone', 
+                  'cep'
+                  )
 
 class TceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tce
-        fields = 'status', 'apoliceseguro', 'bolsa'
+        fields = ('status', 
+                  'apoliceseguro', 
+                  'bolsa'
+                  )
 
 class EstagioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Estagio
-        fields = 'id', 'dtinicio', 'dtfim', 'tce.apoliceseguro'
+        fields = ('id', 
+                  'dtinicio', 
+                  'dtfim', 
+                  'tce.apoliceseguro'
+                  )
 
 class RelatorioSemestralSerializer(serializers.ModelSerializer):
     class Meta:
         model = RelatorioSemestral
-        fields = 'status', 'data_envio', 'semestre', 'horas_estagiadas'
+        fields = ('status', 
+                  'data_envio', 
+                  'semestre', 
+                  'horas_estagiadas'
+                  )
+        read_only_fields = ['estagio']
