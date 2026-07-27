@@ -56,7 +56,6 @@ class Coordenador(models.Model):
         relatorioSemestral.se_reprovar()
 
 class Empresa(models.Model):
-    id = models.AutoField(primary_key=True)
     razao_social = models.CharField(max_length=255, verbose_name="Razão Social")
     telefone = PhoneNumberField(region='BR', verbose_name="Telefone")
     cep = models.CharField(max_length=9, verbose_name="CEP", validators=[validar_cep])
@@ -119,7 +118,6 @@ class Tce(models.Model):
     
 
 class Estagio(models.Model):
-    idestagio = models.AutoField(primary_key=True)
     dtinicio = models.DateField(verbose_name="Data de Início")
     dtfim = models.DateField(null=True, blank=True, verbose_name="Data de Término")
     cargahorariasemanal = models.IntegerField(verbose_name="Carga Horária Semanal")
@@ -157,7 +155,7 @@ class RelatorioSemestral(models.Model):
     semestre = models.CharField(max_length=4, validators=[validar_semestre], verbose_name="Semestre")
     horas_estagiadas = models.PositiveIntegerField(verbose_name="Horas Estagiadas", validators=[validar_positivo])
     coordenador = models.ForeignKey(Coordenador, on_delete=models.CASCADE, verbose_name="Coordenador")
-    estagio = models.ForeignKey(Estagio, on_delete=models.CASCADE, db_column='id_estagio', verbose_name="Estágio")
+    estagio = models.ForeignKey(Estagio, on_delete=models.CASCADE, db_column='estagio', verbose_name="Estágio")
 
     def se_aprovar(self):
         if(self.status != StatusDocumento.APROVADO):
