@@ -89,7 +89,7 @@ class EstagioViewSet(viewsets.ModelViewSet):
         user = self.request.user
 
         if hasattr(user, 'aluno'):
-            return Estagio.objects.filter(tec__aluno=user.aluno)
+            return Estagio.objects.filter(tce__aluno=user.aluno)
         
         if hasattr(user, 'secretaria'):
             return Estagio.objects.all()
