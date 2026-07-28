@@ -1,12 +1,16 @@
 from django.shortcuts import render
 from rest_framework import viewsets
 from .models import Aluno, Secretaria, Coordenador, Empresa, Tce, Estagio, RelatorioSemestral
-from .serializers import AlunoSerializer, SecretariaSerializer, CoordenadorSerializer, EmpresaSerializer, TceSerializer, EstagioSerializer, RelatorioSemestralSerializer
+from .serializers import AlunoSerializer, SecretariaSerializer, CoordenadorSerializer, EmpresaSerializer, TceSerializer, EstagioSerializer, RelatorioSemestralSerializer, CustomTokenObtainPairSerializer
 from .permissions import IsAluno, IsSecretaria, IsCoordenador
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 
 
 class AlunoViewSet(viewsets.ModelViewSet):

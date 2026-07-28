@@ -1,5 +1,28 @@
 from rest_framework import serializers
 from .models import Usuario, Aluno, Secretaria, Coordenador, Empresa, Tce, Estagio, RelatorioSemestral
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @staticmethod
+    def _get_role(user):
+        if hasattr(user, 'aluno'):
+            return 'aluno'
+        if hasattr(user, 'secretaria'):
+            return 'secretaria'
+        if hasattr(user, 'coordenador'):
+            return 'coordenador'
+        return None
+
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['role'] = cls._get_role(user)
+        return token
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        data['role'] = self._get_role(self.user)
+        return data
 
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
