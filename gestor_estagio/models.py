@@ -101,7 +101,8 @@ class Tce(models.Model):
     status = models.CharField(max_length=20, choices=StatusDocumento.choices, default=StatusDocumento.PENDENTE, verbose_name="Status do TCE")
     apoliceseguro = models.CharField(max_length=50, primary_key=True, verbose_name="Apólice de Seguro",)
     bolsa = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Bolsa", validators=[validar_positivo])
-    secretaria = models.ForeignKey(Secretaria, on_delete=models.PROTECT, verbose_name="Secretaria")
+    secretaria = models.ForeignKey(Secretaria, on_delete=models.PROTECT, verbose_name="Secretaria", null=True,
+    blank=True)
     aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE, verbose_name="Aluno")
 
     def se_aprovar(self):
