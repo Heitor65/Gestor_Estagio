@@ -49,6 +49,17 @@ class TceViewSet(viewsets.ModelViewSet):
     queryset = Tce.objects.all()
     serializer_class = TceSerializer
 
+    def get_queryset(self):
+        user = self.request.user
+
+        if hasattr(user, 'aluno'):
+            return Tce.objects.filter(aluno=user.aluno)
+
+        if hasattr(user, 'secretaria'):
+            return Tce.objects.all()
+
+        return Tce.objects.none()    
+    
     def get_permissions(self):
         if self.action == 'create':
             permission_classes = [IsAluno]
@@ -73,6 +84,17 @@ class TceViewSet(viewsets.ModelViewSet):
 class EstagioViewSet(viewsets.ModelViewSet):
     queryset = Estagio.objects.all()
     serializer_class = EstagioSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+
+        if hasattr(user, 'aluno'):
+            return Estagio.objects.filter(tec__aluno=user.aluno)
+        
+        if hasattr(user, 'secretaria'):
+            return Estagio.objects.all()
+        
+        return Estagio.objects.none()
 
     def get_permissions(self):
         if self.action == 'create':
@@ -110,6 +132,20 @@ class EstagioViewSet(viewsets.ModelViewSet):
 class RelatorioSemestralViewSet(viewsets.ModelViewSet):
     queryset = RelatorioSemestral.objects.all()
     serializer_class = RelatorioSemestralSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+
+        if hasattr(user, 'aluno'):
+            return RelatorioSemestral.objects.filter(estagio__tce__aluno=user.aluno)
+        
+        if hasattr(user, 'coordenador'):
+            return RelatorioSemestral.objects.filter(coordenador=user.coordenador)
+        
+        if hasattr(user, 'secretaria'):
+            return RelatorioSemestral.objects.all()
+
+        return RelatorioSemestral.objects.none()
 
     def get_permissions(self):
         if self.action == 'create':
