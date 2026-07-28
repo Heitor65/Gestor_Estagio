@@ -100,15 +100,25 @@ class EmpresaSerializer(serializers.ModelSerializer):
         fields = ('id', 
                   'razao_social', 
                   'telefone', 
-                  'cep'
+                  'cep',
+                  'uf',
+                  'cidade',
+                  'log',
+                  'comp',
+                  'num',
+                  'bairro',
+                  'cnpj'
                   )
+        read_only_fields = ['id']
 
 class TceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tce
         fields = ('status', 
                   'apoliceseguro', 
-                  'bolsa'
+                  'bolsa',
+                  'secretaria',
+                  'aluno',
                   )
 
 class EstagioSerializer(serializers.ModelSerializer):
@@ -117,8 +127,11 @@ class EstagioSerializer(serializers.ModelSerializer):
         fields = ('id', 
                   'dtinicio', 
                   'dtfim', 
-                  'tce'
+                  'tce',
+                  'cargahorariasemanal',
+                  'empresa'
                   )
+        read_only_fields = ['id']
 
 class RelatorioSemestralSerializer(serializers.ModelSerializer):
     class Meta:
@@ -126,6 +139,7 @@ class RelatorioSemestralSerializer(serializers.ModelSerializer):
         fields = ('status', 
                   'data_envio', 
                   'semestre', 
-                  'horas_estagiadas'
+                  'horas_estagiadas',
+                  'estagio'
                   )
         read_only_fields = ['estagio']
